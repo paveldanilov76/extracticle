@@ -1,7 +1,7 @@
 import argparse
 import logging
 
-import extacticle
+import extracticle
 
 
 def run():
@@ -10,7 +10,7 @@ def run():
     args = parser.parse_args()
 
     try:
-        extractor = extacticle.Extractor(args.url)
+        extractor = extracticle.Extractor(args.url)
         node = extractor.target_node
         logging.debug(node.text)
     except BaseException as ex:
