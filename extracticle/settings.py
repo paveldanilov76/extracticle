@@ -14,7 +14,9 @@ parser.add_argument('urls', type=str, action='store', nargs='+', help='адре�
 parser.add_argument('-c', '--config', type=open,
                     help='файл конфигурации (имеет приоритет по отношению к передаваемым параметрам')
 parser.add_argument('-p', '--pattern', type=int, choices=range(0, len(TRAIT_PATTERNS)), default=1,
-                    help='качество текста определяется по количеству: 0 - предложений; 1 - слов;')
+                    help='качество текста определяется по количеству: 0 - предложений; 1 - слов; '
+                         'игнорируется при указании [-cp|--custom_pattern]')
+parser.add_argument('-cp', '--custom_pattern', type=str, help='кастомный шаблон поиска', default=None)
 parser.add_argument('-w', '--width', type=int, help='ширина текста', default=80)
 parser.add_argument('-f', '--folder', type=str, help='путь для сохранения результата',
                     default=os.path.join(str(Path.home()), 'Documents', 'articles'))
@@ -32,7 +34,10 @@ except BaseException as ex:
 class Config:
     def __init__(self):
         self.urls = args.urls
-        self.trait_pattern = TRAIT_PATTERNS[args.pattern]
+        if args.custom_pattern:
+            self.trait_pattern = args.custom_pattern
+        else:
+            self.trait_pattern = TRAIT_PATTERNS[args.pattern]
         self.max_width = args.width
         self.excluded_tags = ['header', 'footer', 'aside', 'nav', 'iframe', 'figure']
         self.included_tags = ['article', 'div', 'main', 'section']
