@@ -1,7 +1,7 @@
 import os
 import urllib.parse
 
-import config
+from . import settings
 from .errors import ExportError
 
 
@@ -9,8 +9,8 @@ class Exporter:
     """
     Инструменты экспорта
     """
-    path = config.ARTICLES_PATH
-    ext = config.EXTENSION
+    path = settings.conf.folder
+    ext = settings.conf.extension
 
     @staticmethod
     def _url2path(url: str, dest: str, ext: str) -> str:
@@ -21,6 +21,7 @@ class Exporter:
         :param ext: расширение експортируемого файла
         :return: абсолютный путь к создаваемому файлу
         """
+        url = urllib.parse.unquote(url)
         parsed_url = urllib.parse.urlparse(url)
         path = parsed_url.path.strip('/')
         path = os.path.splitext(path)[0]
@@ -42,8 +43,8 @@ class Exporter:
         try:
             if not os.path.exists(os.path.dirname(filename)):
                 os.makedirs(os.path.dirname(filename))
-                with open(filename, 'w', encoding='utf8') as f:
-                    f.write(content)
+            with open(filename, 'w', encoding='utf8') as f:
+                f.write(content)
         except BaseException as ex:
             raise ExportError(filename, str(ex))
 

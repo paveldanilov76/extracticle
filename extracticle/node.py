@@ -3,14 +3,13 @@ import textwrap
 
 import bs4
 
-import config
+from . import settings
 from .formatter import TagFormatter
 
 
 class Node:
-    content_tags = config.CONTENT_TAGS
-    trait_pattern = config.TRAIT_PATTERN
-    width = config.MAX_WIDTH
+    trait_pattern = settings.conf.trait_pattern
+    width = settings.conf.max_width
 
     def __init__(self, item: bs4.Tag, tittle=''):
         """
@@ -20,15 +19,11 @@ class Node:
         """
         self._item = item
         self._tittle = tittle
-        self._payload = None
         self._accord_trait = None
         self._text = None
 
     def __lt__(self, other):
         return self.accord_trait < other.accord_trait
-
-    def __str__(self):
-        return '{} of {} pcs'.format(self._item.name, len(self.payload))
 
     @property
     def text(self) -> str:
@@ -38,16 +33,18 @@ class Node:
         """
         if self._text is None:
             soup = bs4.BeautifulSoup(str(self._item), 'html.parser')
-            for tag_name in self.content_tags:
-                reformat_function = TagFormatter.of(tag_name)
-                for child in soup.findAll(tag_name):
-                    reformat_function(child, soup)
+
+            for tag in soup.find_all():
+                reformat_function = TagFormatter.of(tag.name)
+                reformat_function(tag, soup)
+
             [br.replace_with('\n') for br in soup.find_all('br')]
 
             text = re.sub('\r', '', soup.text)
             if self._tittle:
                 text = '\n\n'.join([self._tittle, text])
             text = '\n'.join(textwrap.fill(x, width=self.width) for x in text.split('\n'))
+            text = re.sub(r'\n{3,}', '\n\n', text)
             self._text = text
 
         return self._text
@@ -61,16 +58,6 @@ class Node:
         if self._accord_trait is None:
             self._accord_trait = len(re.findall(self.trait_pattern, self._item.text))
         return self._accord_trait
-
-    @property
-    def payload(self) -> list:
-        """
-        Список тэгов, входящих в целевой узел
-        :return: list<bs4.Tag>
-        """
-        if self._payload is None:
-            self._payload = list(self._item.find_all(self.content_tags, recursive=False))
-        return self._payload
 
     @property
     def parent(self) -> bs4.Tag:

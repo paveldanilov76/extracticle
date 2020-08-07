@@ -1,3 +1,6 @@
+import urllib.parse
+
+
 class TagFormatter:
     """
     Шаблоны для форматирования тегов целевого узла
@@ -17,7 +20,7 @@ class TagFormatter:
     @staticmethod
     def a(elem, _):
         if elem.attrs.get('href') is not None:
-            elem.replace_with('{} [{}]'.format(elem.text.strip(), elem.attrs['href']))
+            elem.replace_with('{} [{}]'.format(elem.text.strip(), urllib.parse.unquote(elem.attrs['href'])))
         else:
             elem.replace_with(elem.text)
 
