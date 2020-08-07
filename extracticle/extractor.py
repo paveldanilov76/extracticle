@@ -12,7 +12,8 @@ from .node import Node
 class Extractor:
     container_tags = settings.conf.included_tags
     excluded_tags = settings.conf.excluded_tags
-    root_attributes = settings.conf.root_attributes
+    excluded_attr = settings.conf.excluded_attr
+    included_attr = settings.conf.included_attr
     user_agent = settings.conf.user_agent
 
     def __init__(self, url):
@@ -50,7 +51,7 @@ class Extractor:
         В случае неудачной попытки извлечения генерируется исключение ExtractFailed
         :return: Node
         """
-        if self.root_attributes:
+        if self.included_attr:
             if not self._targets:
                 raise ExtractFailed()
             return self._targets
@@ -77,7 +78,7 @@ class Extractor:
         body = self.soup.find('body')
         self._trim_excludes(body)
 
-        if self.root_attributes:
+        if self.included_attr:
             self._trim_by_attributes(body)
         else:
             self._trim(body)
@@ -93,9 +94,10 @@ class Extractor:
         excludes = body.find_all(self.excluded_tags)
         for exclude in excludes:
             exclude.extract()
-        excludes = body.find_all(attrs={'class': 'footer'})
-        for exclude in excludes:
-            exclude.extract()
+        for attr in self.excluded_attr:
+            excludes = body.find_all(attrs=attr)
+            for exclude in excludes:
+                exclude.extract()
 
     def _trim_by_attributes(self, body):
         """
@@ -104,10 +106,11 @@ class Extractor:
         :param body:
         :return:
         """
-        for tag in body.find_all(attrs=self.root_attributes):
-            node = Node(tag)
-            if node.accord_trait > 0:
-                self._targets.append(node)
+        for attr in self.included_attr:
+            for tag in body.find_all(attrs=attr):
+                node = Node(tag)
+                if node.accord_trait > 0:
+                    self._targets.append(node)
 
     def _trim(self, root: bs4.Tag):
         """

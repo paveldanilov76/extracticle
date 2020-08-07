@@ -29,9 +29,11 @@ class Config:
     urls = args.urls
     trait_pattern = TRAIT_PATTERNS[args.pattern]
     max_width = args.width
-    included_tags = ['article', 'div', 'main', 'section']
     excluded_tags = ['header', 'footer', 'aside', 'nav', 'iframe', 'figure']
-    root_attributes = {}
+    included_tags = ['article', 'div', 'main', 'section']
+    excluded_attr = [{'id': 'ChooserPanel'}, {'class': 'footer'}]
+    # included_attr = [{'id': 'main-tga'}, {'id': 'main-itd'}]
+    included_attr = []
     folder = args.folder
     extension = args.extension
     user_agent = 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:79.0) Gecko/20100101 Firefox/79.0'
