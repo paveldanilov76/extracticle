@@ -101,6 +101,8 @@
 * https://sbis.ru/news/ofd/64865ff6-b3a9-430f-a81d-9b7d107d3733
 * https://sbis.ru/news/ereport/e7a147fe-f90d-4436-8e81-287a9af3c50c
 
+Результат представлен в [extracticle/articles](https://github.com/paveldanilov76/extracticle/tree/master/articles)
+
 ## Потенциальные улучшения
 * Возможность экспорта статей в формат *.pdf, для возможности отображения изображений
 * Реализация Web-приложения для вывода извлечённых статей на web-странице вместе с изображениями, видео и т.д, относящимися из контекста статей
