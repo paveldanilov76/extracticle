@@ -1,8 +1,8 @@
 # Article Extractor (extracticle)
 
 ## Распространение
-* распространяемый пакет *.whl
-* исполняемы файл *.exe
+* распространяемый пакет [*.whl](https://github.com/paveldanilov76/extracticle/raw/master/dist/extracticle-1.0-py3-none-any.whl)
+* исполняемы файл [*.exe](https://github.com/paveldanilov76/extracticle/raw/master/dist/extracticle.exe)
 
 ## Установка
     pip install path/to/file/extracticle-1.0-py3-none-any.whl
