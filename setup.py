@@ -20,7 +20,7 @@ setup(
     version=1.0,
     install_requires=install_requires,
     packages=find_packages(),
-    long_description=open(join(dirname(__file__), 'README.md')).read(),
+    long_description=open(join(dirname(__file__), 'README.md'), encoding='UTF-8').read(),
     entry_points={
         'console_scripts':
             [
